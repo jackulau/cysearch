@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#C8102E"/>
+
+  <!-- Stylized CY letters -->
+  <text x="4" y="24" font-family="Arial, sans-serif" font-weight="bold" font-size="20" fill="#FFFFFF">CY</text>
+
+  <!-- Gold underline accent -->
+  <rect x="4" y="26" width="24" height="2.5" rx="1" fill="#F1BE48"/>
+</svg>

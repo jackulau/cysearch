@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C8102E"/>
+      <stop offset="100%" style="stop-color:#9A0C23"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg-gradient)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Logo Container -->
+  <g transform="translate(490, 120)">
+    <!-- White background for logo -->
+    <rect x="0" y="0" width="120" height="120" rx="24" fill="white" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.2))"/>
+
+    <!-- Logo icon scaled (64 -> 100, scale factor 1.5625) -->
+    <g transform="translate(10, 10) scale(1.5625)">
+      <!-- Background rounded square -->
+      <rect width="64" height="64" rx="14" fill="#C8102E"/>
+
+      <!-- Magnifying glass lens -->
+      <circle cx="28" cy="28" r="16" stroke="#FFFFFF" stroke-width="4" fill="none"/>
+
+      <!-- CY text inside the lens -->
+      <text x="28" y="34" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="18" fill="#FFFFFF">CY</text>
+
+      <!-- Gold accent arc on top of lens -->
+      <path d="M 16 20 A 16 16 0 0 1 40 20" stroke="#F1BE48" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+      <!-- Magnifying glass handle -->
+      <line x1="40" y1="40" x2="54" y2="54" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+
+      <!-- Gold accent on handle -->
+      <line x1="44" y1="44" x2="50" y2="50" stroke="#F1BE48" stroke-width="2" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="320" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="bold" fill="white">CySearch</text>
+
+  <!-- Tagline -->
+  <text x="600" y="380" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="rgba(255,255,255,0.9)">The better way to search for classes at</text>
+
+  <!-- University Name -->
+  <text x="600" y="430" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="600" fill="#F1BE48">Iowa State University</text>
+
+  <!-- Bottom accent line -->
+  <rect x="350" y="500" width="500" height="4" rx="2" fill="#F1BE48"/>
+</svg>

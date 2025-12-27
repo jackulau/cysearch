@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Background rounded square -->
+  <rect width="32" height="32" rx="7" fill="#C8102E"/>
+
+  <!-- Magnifying glass lens -->
+  <circle cx="14" cy="14" r="8" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+
+  <!-- CY text inside the lens -->
+  <text x="14" y="17" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="9" fill="#FFFFFF">CY</text>
+
+  <!-- Gold accent arc -->
+  <path d="M 8 10 A 8 8 0 0 1 20 10" stroke="#F1BE48" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Handle -->
+  <line x1="20" y1="20" x2="27" y2="27" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Gold accent on handle -->
+  <line x1="22" y1="22" x2="25" y2="25" stroke="#F1BE48" stroke-width="1" stroke-linecap="round"/>
+</svg>
