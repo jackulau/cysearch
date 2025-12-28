@@ -72,6 +72,7 @@ export function CatalogSidebar({
   const [subjects, setSubjects] = useState<string[]>([]);
   const [terms, setTerms] = useState<{ label: string; value: string }[]>([]);
   const [subjectSearch, setSubjectSearch] = useState("");
+  const [instructorSearch, setInstructorSearch] = useState(filters.instructor || "");
   const [expandedSections, setExpandedSections] = useState({
     subjects: true,
     courseLevel: true,
@@ -176,6 +177,41 @@ export function CatalogSidebar({
             Show only open sections
           </label>
         </div>
+      </div>
+
+      {/* Instructor Search */}
+      <div className="p-5 border-b border-gray-200">
+        <label className="text-base font-semibold text-gray-700 mb-3 block">
+          Instructor
+        </label>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Input
+            placeholder="Search by instructor..."
+            value={instructorSearch}
+            onChange={(e) => setInstructorSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                onFiltersChange({ ...filters, instructor: instructorSearch || undefined });
+              }
+            }}
+            className="pl-10 h-10 text-base"
+          />
+          {instructorSearch && (
+            <button
+              onClick={() => {
+                setInstructorSearch("");
+                onFiltersChange({ ...filters, instructor: undefined });
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2"
+            >
+              <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+            </button>
+          )}
+        </div>
+        {filters.instructor && filters.instructor !== instructorSearch && (
+          <p className="text-xs text-gray-500 mt-2">Press Enter to search</p>
+        )}
       </div>
 
       {/* Subjects Section */}
@@ -468,14 +504,15 @@ export function CatalogSidebar({
       </div>
 
       {/* Clear Filters */}
-      {(filters.subject || filters.subjects?.length || filters.classType || filters.deliveryMode || filters.openOnly || filters.courseNumberMin || filters.courseNumberMax) && (
+      {(filters.subject || filters.subjects?.length || filters.classType || filters.deliveryMode || filters.openOnly || filters.courseNumberMin || filters.courseNumberMax || filters.instructor) && (
         <div className="p-5">
           <button
-            onClick={() =>
+            onClick={() => {
+              setInstructorSearch("");
               onFiltersChange({
                 query: filters.query,
-              })
-            }
+              });
+            }}
             className="w-full text-base text-cardinal hover:text-cardinal/80 font-medium transition-colors py-2"
           >
             Clear all filters

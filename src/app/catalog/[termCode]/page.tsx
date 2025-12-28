@@ -60,6 +60,7 @@ function CatalogContent() {
       openOnly: searchParams.get("openOnly") === "true",
       courseNumberMin: searchParams.get("courseNumberMin") ? parseInt(searchParams.get("courseNumberMin")!) : undefined,
       courseNumberMax: searchParams.get("courseNumberMax") ? parseInt(searchParams.get("courseNumberMax")!) : undefined,
+      instructor: searchParams.get("instructor") || undefined,
     };
   });
 
@@ -120,6 +121,7 @@ function CatalogContent() {
     if (filters.openOnly) params.set("openOnly", "true");
     if (filters.courseNumberMin !== undefined) params.set("courseNumberMin", filters.courseNumberMin.toString());
     if (filters.courseNumberMax !== undefined) params.set("courseNumberMax", filters.courseNumberMax.toString());
+    if (filters.instructor) params.set("instructor", filters.instructor);
 
     const queryString = params.toString();
     const newUrl = `/catalog/${termCode}${queryString ? `?${queryString}` : ""}`;
@@ -150,6 +152,7 @@ function CatalogContent() {
         if (newFilters.openOnly) params.set("openOnly", "true");
         if (newFilters.courseNumberMin !== undefined) params.set("courseNumberMin", newFilters.courseNumberMin.toString());
         if (newFilters.courseNumberMax !== undefined) params.set("courseNumberMax", newFilters.courseNumberMax.toString());
+        if (newFilters.instructor) params.set("instructor", newFilters.instructor);
         params.set("page", newPage.toString());
         params.set("pageSize", "20");
 
@@ -243,6 +246,7 @@ function CatalogContent() {
     filters.classType,
     filters.deliveryMode,
     filters.openOnly,
+    filters.instructor,
   ].filter(Boolean).length;
 
   return (
@@ -463,6 +467,12 @@ function CatalogContent() {
                   <FilterTag
                     label={filters.deliveryMode}
                     onRemove={() => setFilters({ ...filters, deliveryMode: undefined })}
+                  />
+                )}
+                {filters.instructor && (
+                  <FilterTag
+                    label={`Instructor: ${filters.instructor}`}
+                    onRemove={() => setFilters({ ...filters, instructor: undefined })}
                   />
                 )}
               </div>

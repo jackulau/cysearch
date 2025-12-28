@@ -70,18 +70,76 @@ export async function GET(request: NextRequest) {
       conditions.push(sql`CAST(${courses.courseNumber} AS INTEGER) <= ${filters.courseNumberMax}`);
     }
 
-    // Get courses matching filters
+    // If filtering by instructor, term, classType, or deliveryMode, we need to filter courses
+    // that have matching sections BEFORE pagination
     const db = getDb();
-    let courseQuery = db.select().from(courses);
 
-    if (conditions.length > 0) {
-      courseQuery = courseQuery.where(and(...conditions)) as typeof courseQuery;
+    // Build section-level conditions for pre-filtering courses
+    const sectionFilterConditions = [];
+    if (filters.term) {
+      sectionFilterConditions.push(sql`${sections.termCode} = ${filters.term}`);
+    }
+    if (filters.instructor) {
+      sectionFilterConditions.push(sql`${sections.instructor} LIKE ${'%' + filters.instructor + '%'}`);
+    }
+    if (filters.classType) {
+      sectionFilterConditions.push(sql`${sections.classType} = ${filters.classType}`);
+    }
+    if (filters.deliveryMode) {
+      sectionFilterConditions.push(sql`${sections.deliveryMode} = ${filters.deliveryMode}`);
     }
 
-    const allCourses = await courseQuery
-      .orderBy(courses.subject, courses.courseNumber)
-      .limit(pageSize)
-      .offset(offset);
+    let allCourses;
+
+    if (sectionFilterConditions.length > 0) {
+      // Get course IDs that have matching sections first
+      const sectionWhere = sectionFilterConditions.length > 1
+        ? sql`${sql.join(sectionFilterConditions, sql` AND `)}`
+        : sectionFilterConditions[0];
+
+      const matchingCourseIds = await db
+        .selectDistinct({ courseId: sections.courseId })
+        .from(sections)
+        .where(sectionWhere);
+
+      const courseIds = matchingCourseIds.map(r => r.courseId);
+
+      if (courseIds.length === 0) {
+        // No matching sections found
+        return NextResponse.json({
+          courses: [],
+          total: 0,
+          page,
+          pageSize,
+          hasMore: false,
+        });
+      }
+
+      // Add course ID filter to conditions
+      conditions.push(sql`${courses.id} IN (${sql.join(courseIds.map(id => sql`${id}`), sql`, `)})`);
+
+      let courseQuery = db.select().from(courses);
+      if (conditions.length > 0) {
+        courseQuery = courseQuery.where(and(...conditions)) as typeof courseQuery;
+      }
+
+      allCourses = await courseQuery
+        .orderBy(courses.subject, courses.courseNumber)
+        .limit(pageSize)
+        .offset(offset);
+    } else {
+      // No section-level filters, use original query
+      let courseQuery = db.select().from(courses);
+
+      if (conditions.length > 0) {
+        courseQuery = courseQuery.where(and(...conditions)) as typeof courseQuery;
+      }
+
+      allCourses = await courseQuery
+        .orderBy(courses.subject, courses.courseNumber)
+        .limit(pageSize)
+        .offset(offset);
+    }
 
     // Get sections for each course with additional filters
     const coursesWithSections: CourseWithSections[] = [];
@@ -119,7 +177,7 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      if (filteredSections.length === 0 && (filters.term || filters.openOnly)) {
+      if (filteredSections.length === 0 && (filters.term || filters.openOnly || filters.instructor)) {
         // Skip courses with no matching sections
         continue;
       }

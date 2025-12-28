@@ -25,6 +25,7 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
   const [terms, setTerms] = useState<{ label: string; value: string }[]>([]);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [searchInput, setSearchInput] = useState(filters.query || "");
+  const [instructorInput, setInstructorInput] = useState(filters.instructor || "");
 
   useEffect(() => {
     let mounted = true;
@@ -60,7 +61,7 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
   }, []);
 
   function handleSearch() {
-    onFiltersChange({ ...filters, query: searchInput });
+    onFiltersChange({ ...filters, query: searchInput, instructor: instructorInput || undefined });
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -71,6 +72,7 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
 
   function clearFilters() {
     setSearchInput("");
+    setInstructorInput("");
     onFiltersChange({});
   }
 
@@ -229,6 +231,19 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
             </div>
           </div>
 
+          {/* Instructor Search */}
+          <div>
+            <label className="text-sm font-medium text-gray-900 mb-1 block">
+              Instructor
+            </label>
+            <Input
+              placeholder="Search by instructor name"
+              value={instructorInput}
+              onChange={(e) => setInstructorInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -296,6 +311,15 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
               onRemove={() =>
                 onFiltersChange({ ...filters, deliveryMode: undefined })
               }
+            />
+          )}
+          {filters.instructor && (
+            <FilterTag
+              label={`Instructor: ${filters.instructor}`}
+              onRemove={() => {
+                setInstructorInput("");
+                onFiltersChange({ ...filters, instructor: undefined });
+              }}
             />
           )}
           {filters.openOnly && (

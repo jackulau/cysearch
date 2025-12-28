@@ -67,8 +67,31 @@ export async function GET() {
       return true;
     });
 
+    // Sort terms so that Spring/Fall come before Winter/Summer for the same time period
+    // This ensures the default (first term) is a main semester
+    const sortedTerms = [...filteredTerms].sort((a, b) => {
+      // First sort by termCode descending (most recent first)
+      if (a.termCode !== b.termCode) {
+        // Extract year and semester
+        const yearA = parseInt(a.termCode.slice(0, 4));
+        const yearB = parseInt(b.termCode.slice(0, 4));
+        const semA = a.termCode.slice(4);
+        const semB = b.termCode.slice(4);
+
+        // Different years - sort by year descending
+        if (yearA !== yearB) {
+          return yearB - yearA;
+        }
+
+        // Same year - prioritize FA > SP > SU > WI
+        const priority: Record<string, number> = { FA: 1, SP: 2, SU: 3, WI: 4 };
+        return (priority[semA] || 5) - (priority[semB] || 5);
+      }
+      return 0;
+    });
+
     return NextResponse.json({
-      terms: filteredTerms.map((t) => ({
+      terms: sortedTerms.map((t) => ({
         label: t.term,
         value: t.termCode,
       })),

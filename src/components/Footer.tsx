@@ -21,7 +21,7 @@ export function Footer() {
               Privacy
             </Link>
             <a
-              href="https://github.com"
+              href="https://github.com/jackulau/cysearch"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-cardinal transition-colors duration-200"
