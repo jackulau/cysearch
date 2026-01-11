@@ -161,21 +161,23 @@ export function AutoScheduleGenerator({
   const optionalCount = pool.length - requiredCount;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start sm:items-center justify-between gap-2">
         <div>
-          <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-cardinal" />
-            Auto Schedule Generator
+          <h3 className="font-semibold text-gray-900 flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base">
+            <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cardinal flex-shrink-0" />
+            <span className="hidden sm:inline">Auto Schedule Generator</span>
+            <span className="sm:hidden">Auto Generator</span>
           </h3>
-          <p className="text-xs text-gray-500 mt-0.5">
-            Add courses, star required ones, then generate options
+          <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">
+            <span className="hidden sm:inline">Add courses, star required ones, then generate options</span>
+            <span className="sm:hidden">Add courses & generate schedules</span>
           </p>
         </div>
         {pool.length > 0 && (
-          <Button variant="ghost" size="sm" onClick={handleClearPool}>
-            Clear All
+          <Button variant="ghost" size="sm" onClick={handleClearPool} className="text-xs h-7 sm:h-8 px-2 sm:px-3">
+            Clear
           </Button>
         )}
       </div>
@@ -185,27 +187,27 @@ export function AutoScheduleGenerator({
 
       {/* Pool limit warning */}
       {pool.length >= MAX_POOL_SIZE && (
-        <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg">
-          <AlertTriangle className="h-3 w-3" />
-          Maximum {MAX_POOL_SIZE} courses reached
+        <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-amber-600 bg-amber-50 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg">
+          <AlertTriangle className="h-3 w-3 flex-shrink-0" />
+          Max {MAX_POOL_SIZE} courses
         </div>
       )}
 
       {/* Course Pool */}
       {pool.length > 0 ? (
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-xs sm:text-sm">
             <span className="text-gray-600">
-              Course Pool ({pool.length})
+              Pool ({pool.length})
               {requiredCount > 0 && (
-                <span className="text-amber-600 ml-1">
-                  ({requiredCount} required, {optionalCount} optional)
+                <span className="text-amber-600 ml-1 text-[10px] sm:text-xs">
+                  ({requiredCount} req, {optionalCount} opt)
                 </span>
               )}
             </span>
           </div>
 
-          <div className="space-y-2 max-h-64 overflow-y-auto">
+          <div className="space-y-1.5 sm:space-y-2 max-h-48 sm:max-h-64 overflow-y-auto">
             {pool.map((poolCourse) => (
               <CoursePoolCard
                 key={poolCourse.course.id}
@@ -217,10 +219,10 @@ export function AutoScheduleGenerator({
           </div>
         </div>
       ) : (
-        <div className="text-center py-8 text-gray-500">
-          <Info className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-          <p className="text-sm">Search and add courses to your pool</p>
-          <p className="text-xs mt-1">Star courses that must be in your schedule</p>
+        <div className="text-center py-6 sm:py-8 text-gray-500">
+          <Info className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 text-gray-400" />
+          <p className="text-xs sm:text-sm">Search and add courses to your pool</p>
+          <p className="text-[10px] sm:text-xs mt-1">Star courses that must be in your schedule</p>
         </div>
       )}
 
@@ -229,16 +231,16 @@ export function AutoScheduleGenerator({
         <Button
           onClick={handleGenerate}
           disabled={isGenerating}
-          className="w-full"
+          className="w-full h-9 sm:h-10 text-xs sm:text-sm"
         >
           {isGenerating ? (
             <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 animate-spin" />
               Generating...
             </>
           ) : (
             <>
-              <Sparkles className="h-4 w-4 mr-2" />
+              <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               Generate Schedules
             </>
           )}
@@ -247,20 +249,20 @@ export function AutoScheduleGenerator({
 
       {/* Error */}
       {error && (
-        <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">
-          <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-          <span>{error}</span>
+        <div className="flex items-start gap-1.5 sm:gap-2 text-xs sm:text-sm text-red-600 bg-red-50 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg">
+          <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 mt-0.5" />
+          <span className="text-[10px] sm:text-xs">{error}</span>
         </div>
       )}
 
       {/* Generated options */}
       {generatedOptions.length > 0 && (
-        <div className="space-y-2">
-          <div className="text-sm text-gray-600">
-            Generated {generatedOptions.length} option{generatedOptions.length > 1 ? "s" : ""}
+        <div className="space-y-1.5 sm:space-y-2">
+          <div className="text-xs sm:text-sm text-gray-600">
+            {generatedOptions.length} option{generatedOptions.length > 1 ? "s" : ""} found
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1.5 sm:space-y-2">
             {generatedOptions.map((option, index) => (
               <ScheduleOptionCard
                 key={option.id}
