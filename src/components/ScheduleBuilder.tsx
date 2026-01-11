@@ -202,16 +202,16 @@ export function ScheduleBuilder() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{scheduleName}</h1>
-          <p className="text-gray-600">
+          <h1 className="text-xl sm:text-2xl font-bold">{scheduleName}</h1>
+          <p className="text-sm sm:text-base text-gray-600">
             {sections.length} courses • {totalCredits} credits
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Select value={selectedTerm} onValueChange={setSelectedTerm}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Select term" />
             </SelectTrigger>
             <SelectContent>
@@ -222,14 +222,16 @@ export function ScheduleBuilder() {
               ))}
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={() => setShowSaveDialog(true)}>
-            <Save className="h-4 w-4 mr-1" />
-            Save
-          </Button>
-          <Button variant="outline" onClick={clearSchedule}>
-            <Trash2 className="h-4 w-4 mr-1" />
-            Clear
-          </Button>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Button variant="outline" onClick={() => setShowSaveDialog(true)} className="flex-1 sm:flex-none">
+              <Save className="h-4 w-4 mr-1" />
+              <span className="hidden xs:inline">Save</span>
+            </Button>
+            <Button variant="outline" onClick={clearSchedule} className="flex-1 sm:flex-none">
+              <Trash2 className="h-4 w-4 mr-1" />
+              <span className="hidden xs:inline">Clear</span>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -266,35 +268,38 @@ export function ScheduleBuilder() {
         </div>
       )}
 
-      <div className="grid xl:grid-cols-4 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {/* Schedule Grid */}
-        <div className="xl:col-span-3 lg:col-span-2">
+        <div className="lg:col-span-2 xl:col-span-3 order-2 lg:order-1">
           <Card>
-            <CardHeader>
-              <CardTitle>Weekly Schedule</CardTitle>
+            <CardHeader className="pb-2 sm:pb-4">
+              <CardTitle className="text-base sm:text-lg">Weekly Schedule</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <div className="min-w-[700px]">
+            <CardContent className="p-2 sm:p-6">
+              <div className="overflow-x-auto -mx-2 sm:mx-0">
+                <div className="min-w-[500px] sm:min-w-[600px] md:min-w-[700px]">
                   {/* Days Header */}
                   <div className="grid grid-cols-6 border-b bg-gray-50">
-                    <div className="p-4 text-center font-semibold text-gray-500">
+                    <div className="p-2 sm:p-4 text-center font-semibold text-gray-500 text-xs sm:text-sm">
                       Time
                     </div>
                     {days.map((day) => (
                       <div
                         key={day}
-                        className="p-4 text-center font-semibold text-gray-900"
+                        className="p-2 sm:p-4 text-center font-semibold text-gray-900 text-xs sm:text-sm"
                       >
-                        {day === "M"
-                          ? "Mon"
-                          : day === "T"
-                          ? "Tue"
-                          : day === "W"
-                          ? "Wed"
-                          : day === "R"
-                          ? "Thu"
-                          : "Fri"}
+                        <span className="hidden sm:inline">
+                          {day === "M"
+                            ? "Mon"
+                            : day === "T"
+                            ? "Tue"
+                            : day === "W"
+                            ? "Wed"
+                            : day === "R"
+                            ? "Thu"
+                            : "Fri"}
+                        </span>
+                        <span className="sm:hidden">{day}</span>
                       </div>
                     ))}
                   </div>
@@ -303,13 +308,13 @@ export function ScheduleBuilder() {
                   <div className="relative">
                     {hours.map((hour) => (
                       <div key={hour} className="grid grid-cols-6 border-b">
-                        <div className="px-3 text-sm text-gray-500 flex items-center justify-end">
-                          {hour > 12 ? hour - 12 : hour}:00 {hour >= 12 ? "PM" : "AM"}
+                        <div className="px-1 sm:px-3 text-[10px] sm:text-sm text-gray-500 flex items-center justify-end">
+                          {hour > 12 ? hour - 12 : hour}<span className="hidden sm:inline">:00</span> {hour >= 12 ? "PM" : "AM"}
                         </div>
                         {days.map((day) => (
                           <div
                             key={`${day}-${hour}`}
-                            className="h-14 border-l relative"
+                            className="h-12 border-l relative"
                           >
                             {scheduleEvents
                               .filter((event) => {
@@ -335,26 +340,29 @@ export function ScheduleBuilder() {
                                 const duration =
                                   (endHour - startHour) * 60 +
                                   (endMin - startMin);
-                                const height = (duration / 60) * 56;
+                                // Calculate height based on duration
+                                // Grid row is h-12 (48px) consistently
+                                const height = (duration / 60) * 48;
+                                const topOffset = (startMin / 60) * 48;
 
                                 return (
                                   <div
                                     key={`${event.id}-${day}`}
-                                    className="absolute inset-x-1 rounded text-sm p-2 overflow-hidden z-10"
+                                    className="absolute inset-x-0.5 sm:inset-x-1 rounded text-[10px] sm:text-sm p-1 sm:p-2 overflow-hidden z-10"
                                     style={{
                                       backgroundColor: event.color + "20",
-                                      borderLeft: `3px solid ${event.color}`,
+                                      borderLeft: `2px solid ${event.color}`,
                                       height: `${height}px`,
-                                      top: `${(startMin / 60) * 56}px`,
+                                      top: `${topOffset}px`,
                                     }}
                                   >
                                     <div
-                                      className="font-medium truncate"
+                                      className="font-medium truncate leading-tight"
                                       style={{ color: event.color }}
                                     >
                                       {event.subject} {event.courseNumber}
                                     </div>
-                                    <div className="text-gray-600 truncate">
+                                    <div className="text-gray-600 truncate text-[9px] sm:text-xs hidden sm:block">
                                       {event.location || "TBA"}
                                     </div>
                                   </div>
@@ -369,9 +377,9 @@ export function ScheduleBuilder() {
               </div>
 
               {displaySections.length === 0 && (
-                <div className="text-center py-12 text-gray-500">
-                  <p>Your schedule is empty.</p>
-                  <p className="text-sm">
+                <div className="text-center py-8 sm:py-12 text-gray-500">
+                  <p className="text-sm sm:text-base">Your schedule is empty.</p>
+                  <p className="text-xs sm:text-sm">
                     Add courses from the catalog or use the Auto Generator.
                   </p>
                 </div>
@@ -381,94 +389,98 @@ export function ScheduleBuilder() {
         </div>
 
         {/* Right Sidebar with Tabs */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4 order-1 lg:order-2">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="schedule" className="flex items-center gap-1">
+              <TabsTrigger value="schedule" className="flex items-center gap-1 text-xs sm:text-sm">
                 <Calendar className="h-3 w-3" />
-                My Schedule
+                <span className="hidden xs:inline">My</span> Schedule
               </TabsTrigger>
-              <TabsTrigger value="auto" className="flex items-center gap-1">
+              <TabsTrigger value="auto" className="flex items-center gap-1 text-xs sm:text-sm">
                 <Sparkles className="h-3 w-3" />
                 Auto
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="schedule" className="space-y-4 mt-4">
+            <TabsContent value="schedule" className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
               <Card>
-                <CardHeader>
-                  <CardTitle>Selected Courses</CardTitle>
+                <CardHeader className="pb-2 sm:pb-4">
+                  <CardTitle className="text-sm sm:text-base">Selected Courses</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2 sm:space-y-3 p-3 sm:p-6 pt-0 sm:pt-0">
                   {sections.length === 0 ? (
-                    <p className="text-gray-500 text-sm">No courses added yet.</p>
+                    <p className="text-gray-500 text-xs sm:text-sm">No courses added yet.</p>
                   ) : (
-                    sections.map((section, index) => (
-                      <div
-                        key={section.id}
-                        className="p-3 border rounded-lg space-y-2"
-                        style={{
-                          borderLeftColor: getScheduleColor(index),
-                          borderLeftWidth: "4px",
-                        }}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <Badge variant="cardinal">
-                              {section.subject} {section.courseNumber}
-                            </Badge>
-                            <p className="font-medium text-sm mt-1">
-                              {section.title}
-                            </p>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => removeSection(section.id)}
-                          >
-                            <Trash2 className="h-4 w-4 text-gray-500" />
-                          </Button>
-                        </div>
-
-                        <div className="text-xs text-gray-600 space-y-1">
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {section.meetingDays} {formatTime(section.startTime)}
-                            {section.endTime && ` - ${formatTime(section.endTime)}`}
-                          </div>
-                          {section.location && (
-                            <div className="flex items-center gap-1">
-                              <MapPin className="h-3 w-3" />
-                              {section.location}
+                    <div className="max-h-[300px] lg:max-h-none overflow-y-auto space-y-2 sm:space-y-3">
+                      {sections.map((section, index) => (
+                        <div
+                          key={section.id}
+                          className="p-2 sm:p-3 border rounded-lg space-y-1.5 sm:space-y-2"
+                          style={{
+                            borderLeftColor: getScheduleColor(index),
+                            borderLeftWidth: "4px",
+                          }}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0 flex-1">
+                              <Badge variant="cardinal" className="text-[10px] sm:text-xs">
+                                {section.subject} {section.courseNumber}
+                              </Badge>
+                              <p className="font-medium text-xs sm:text-sm mt-1 truncate">
+                                {section.title}
+                              </p>
                             </div>
-                          )}
-                          {section.instructor && (
-                            <div className="flex items-center gap-1">
-                              <User className="h-3 w-3" />
-                              {section.instructor}
-                            </div>
-                          )}
-                        </div>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0"
+                              onClick={() => removeSection(section.id)}
+                            >
+                              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
+                            </Button>
+                          </div>
 
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-gray-500">
-                            CRN: {section.crn}
-                          </span>
-                          <span className="text-gray-500">
-                            {section.credits || "3"} credits
-                          </span>
+                          <div className="text-[10px] sm:text-xs text-gray-600 space-y-0.5 sm:space-y-1">
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3 w-3 flex-shrink-0" />
+                              <span className="truncate">
+                                {section.meetingDays} {formatTime(section.startTime)}
+                                {section.endTime && ` - ${formatTime(section.endTime)}`}
+                              </span>
+                            </div>
+                            {section.location && (
+                              <div className="flex items-center gap-1">
+                                <MapPin className="h-3 w-3 flex-shrink-0" />
+                                <span className="truncate">{section.location}</span>
+                              </div>
+                            )}
+                            {section.instructor && (
+                              <div className="flex items-center gap-1 hidden sm:flex">
+                                <User className="h-3 w-3 flex-shrink-0" />
+                                <span className="truncate">{section.instructor}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex items-center justify-between text-[10px] sm:text-xs">
+                            <span className="text-gray-500">
+                              CRN: {section.crn}
+                            </span>
+                            <span className="text-gray-500">
+                              {section.credits || "3"} cr
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      ))}
+                    </div>
                   )}
                 </CardContent>
               </Card>
 
               {/* Summary */}
               <Card>
-                <CardContent className="pt-6">
-                  <div className="space-y-2 text-sm">
+                <CardContent className="p-3 sm:p-6 sm:pt-6">
+                  <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Total Credits:</span>
                       <span className="font-medium">{totalCredits}</span>
@@ -488,9 +500,9 @@ export function ScheduleBuilder() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="auto" className="mt-4">
+            <TabsContent value="auto" className="mt-3 sm:mt-4">
               <Card>
-                <CardContent className="pt-6">
+                <CardContent className="p-3 sm:p-6 sm:pt-6">
                   <AutoScheduleGenerator
                     blockedTimes={blockedTimes}
                     termCode={selectedTerm}
