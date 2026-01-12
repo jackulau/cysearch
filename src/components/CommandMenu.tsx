@@ -213,11 +213,12 @@ export function CommandMenu() {
 
 // Keyboard shortcut hint component for header
 export function CommandMenuTrigger({ className }: { className?: string }) {
-  const [isMac, setIsMac] = useState(false);
-
-  useEffect(() => {
-    setIsMac(navigator.platform.toUpperCase().indexOf("MAC") >= 0);
-  }, []);
+  const [isMac] = useState(() => {
+    if (typeof navigator !== "undefined") {
+      return navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+    }
+    return false;
+  });
 
   const handleClick = () => {
     const event = new KeyboardEvent("keydown", {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search } from "lucide-react";
@@ -40,12 +40,13 @@ function QuickLink({ subject, label }: { subject: string; label: string }) {
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [isMac, setIsMac] = useState(false);
+  const [isMac] = useState(() => {
+    if (typeof navigator !== "undefined") {
+      return navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+    }
+    return false;
+  });
   const router = useRouter();
-
-  useEffect(() => {
-    setIsMac(navigator.platform.toUpperCase().indexOf("MAC") >= 0);
-  }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();

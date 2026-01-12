@@ -158,7 +158,7 @@ export function ScheduleBuilder() {
   // Clear preview when switching tabs
   useEffect(() => {
     if (activeTab === "schedule") {
-      setPreviewSections(null);
+      queueMicrotask(() => setPreviewSections(null));
     }
   }, [activeTab]);
 

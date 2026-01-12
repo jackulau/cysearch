@@ -88,19 +88,19 @@ function ClockIcon({ className = "" }: { className?: string }) {
 
 const icons = [CourseIcon, CalendarIcon, SearchIcon, ClockIcon];
 
+function calculateTiles() {
+  if (typeof window === "undefined") return [];
+  const cols = Math.ceil(window.innerWidth / 130) + 1;
+  const rows = Math.ceil(window.innerHeight / 130) + 1;
+  return Array.from({ length: cols * rows }, (_, i) => i);
+}
+
 export function BackgroundGrid() {
-  const [tiles, setTiles] = useState<number[]>([]);
+  const [tiles, setTiles] = useState<number[]>(calculateTiles);
 
   useEffect(() => {
-    // Calculate number of tiles needed to fill viewport
-    const cols = Math.ceil(window.innerWidth / 130) + 1;
-    const rows = Math.ceil(window.innerHeight / 130) + 1;
-    setTiles(Array.from({ length: cols * rows }, (_, i) => i));
-
     const handleResize = () => {
-      const cols = Math.ceil(window.innerWidth / 130) + 1;
-      const rows = Math.ceil(window.innerHeight / 130) + 1;
-      setTiles(Array.from({ length: cols * rows }, (_, i) => i));
+      setTiles(calculateTiles());
     };
 
     window.addEventListener("resize", handleResize);

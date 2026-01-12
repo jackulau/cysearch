@@ -58,20 +58,22 @@ export function SchedulePanel({
 
   // Load section details and blocked times from localStorage
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("cysearch_schedule_details");
-      if (saved) {
-        const data = JSON.parse(saved);
-        setSections(data.sections || []);
-      }
+    queueMicrotask(() => {
+      try {
+        const saved = localStorage.getItem("cysearch_schedule_details");
+        if (saved) {
+          const data = JSON.parse(saved);
+          setSections(data.sections || []);
+        }
 
-      const savedBlocked = localStorage.getItem("cysearch_blocked_times");
-      if (savedBlocked) {
-        setBlockedTimes(JSON.parse(savedBlocked));
+        const savedBlocked = localStorage.getItem("cysearch_blocked_times");
+        if (savedBlocked) {
+          setBlockedTimes(JSON.parse(savedBlocked));
+        }
+      } catch (error) {
+        console.error("Failed to load schedule from storage:", error);
       }
-    } catch (error) {
-      console.error("Failed to load schedule from storage:", error);
-    }
+    });
   }, [scheduleSectionIds]);
 
   // Save blocked times to localStorage
